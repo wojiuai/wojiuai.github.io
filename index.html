@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="前沿化学研究实验室 - 探索分子世界的奥秘">
+    <meta name="keywords" content="化学研究,实验室,科研,学术,创新,分子科学">
+    <meta name="author" content="化学实验室">
+    <title>前沿化学研究实验室</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #2c88d9;
+            --accent-color: #64b5f6;
+            --background-light: #f5f9ff;
+            --background-dark: #1a3c5a;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --text-light: #ffffff;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow-strong: 0 15px 40px rgba(0,0,0,0.1);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--background-light);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            transition: var(--transition-smooth);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-soft);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 导航栏样式修改 */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .school-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: var(--transition-smooth);
+            transform-origin: right;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-accent);
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition-smooth);
+            transform: translateY(100%);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover::before {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 主要内容区域 */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        /* 轮播图 */
+        .slider-container {
+            position: relative;
+            margin: 2rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-strong);
+            background-color: #e6f3ff; /* 浅蓝色背景 */
+        }
+
+        .slider {
+            display: flex;
+            transition: var(--transition-smooth);
+        }
+
+        .slider img {
+            width: 100%;
+            height: 70vh;
+            object-fit: cover;
+            filter: brightness(0.9);
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .slider-dot.active {
+            background: var(--text-light);
+            transform: scale(1.2);
+        }
+
+        /* 内容卡片 */
+        .content-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* 标题样式 */
+        h1, h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after, h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+        }
+
+        /* 成员卡片 */
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .member-photo {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .member-card:hover .member-photo {
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            padding: 1.5rem;
+        }
+
+        .member-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-info .title {
+            color: var(--secondary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .section {
+                padding: 0 1.5rem;
+            }
+
+            .slider img {
+                height: 60vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .school-logo {
+                width: 35px;
+                height: 35px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .slider img {
+                height: 50vh;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-container {
+                gap: 0.5rem;
+            }
+
+            .school-logo {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .slider img {
+                height: 40vh;
+            }
+        }
+
+        /* 添加联系信息卡片样式 */
+        .contact-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .professor-avatar {
+            width: 300px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* 研究方向样式 */
+        .research-directions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem; 
+            margin-top: 2rem;
+        }
+
+        .research-item {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+        }
+
+        .research-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* 团队成员分类样式 */
+        .team-category {
+            margin: 3rem 0;
+        }
+
+        .team-category h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 教授信息部分样式 */
+        .professor-section {
+            margin-top: 4rem;
+        }
+
+        .professor-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .professor-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+        }
+
+        .professor-title {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0.5rem 0;
+        }
+
+        .professor-edu {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-details {
+            background: var(--background-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .contact-details p {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .contact-card {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .professor-avatar {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+                aspect-ratio: 3/4;
+            }
+
+            .contact-info {
+                margin-top: 1.5rem;
+                width: 100%;
+            }
+        }
+
+        /* 文章列表样式 */
+        .content-card ul {
+            padding-left: 2rem;
+        }
+
+        .content-card li {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .content-card li:hover {
+            background-color: var(--background-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem -1rem 1.5rem -1rem;
+            transition: var(--transition-smooth);
+        }
+
+        /* 特殊标记样式 */
+        .content-card sup {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .content-card em {
+            color: var(--primary-color);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* 期刊名称样式 */
+        .journal-name {
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .content-card ul {
+                padding-left: 1.5rem;
+            }
+
+            .content-card li {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <img src="images/school-logo.png" alt="学校标志" class="school-logo">
+                <div class="logo">
+                    <a href="#" onclick="showContent('home'); return false;">王力课题组</a>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showContent('home'); return false;">主页</a></li>
+                <li><a href="#" onclick="showContent('research'); return false;">研究方向</a></li>
+                <li><a href="#" onclick="showContent('team'); return false;">课题组成员</a></li>
+                <li><a href="#" onclick="showContent('publications'); return false;">发表文章</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="section">
+            <div class="slider-container">
+                <div class="slider">
+                    <img src="images/lab1.jpg" alt="实验室环境展示">
+                    <img src="images/lab2.jpg" alt="实验设备展示">
+                    <img src="images/lab3.jpg" alt="研究团队工作场景">
+                    <img src="images/lab4.jpg" alt="科研成果展示">
+                </div>
+                <div class="slider-controls"></div>
+            </div>
+            
+            <!-- 主页简介 -->
+            <div class="content-card animate-fade-in" style="margin-top: 3rem;">
+                <h1>实验室简介</h1>
+                <p>实验室专注于有机化学在镧系和锕系元素分离中的应用，研究有机配体的结构与性能关系，开发高性能分离材料。</p>
+                <p>实验室配备了国际先进的研究设备，为开展高水平研究提供了坚实的硬件基础。</p>
+            </div>
+
+            <!-- 课题组负责人信息 -->
+            <div class="professor-section animate-fade-in">
+                <h2>课题组负责人</h2>
+                <div class="contact-card">
+                    <img src="images/professor.jpg" alt="课题组负责人" class="professor-avatar">
+                    <div class="contact-info">
+                        <h3>王力</h3>
+                        <p class="professor-title">副研究员/硕士生导师</p>
+                        <div class="contact-details">
+                            <p><strong>地址：</strong>北京市海淀区西三环北路105号</p>
+                            <p><strong>邮编：</strong>100089</p>
+                            <p><strong>电话：</strong>13001129921</p>
+                            <p><strong>邮箱：</strong>liwang@cnu.edu.cn</p>
+                            <p><strong>办公室：</strong>首都师范大学化学系实验楼231室</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 其他部分默认隐藏 -->
+        <section id="research" class="section" style="display: none;">
+            <h1>研究方向</h1>
+            <div class="research-directions">
+                
+                <div class="research-item">
+                    <h3>材料化学</h3>
+                    <p>镧/锕分离配体设计与性能研究</p>
+                </div>
+                <div class="research-item">
+                    <h3>生物医药</h3>
+                    <p>过渡金属配合物的合成及其在癌症诊疗中的应用</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="section" style="display: none;">
+            <h1>课题组成员</h1>
+            
+            <div class="team-category">
+                <h2>研究生</h2>
+                <div class="member-grid">
+                    <div class="member-card">
+                        <img src="images/phd1.jpg" alt="研究生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>康宇</h3>
+                            <p class="title">硕士研究生</p>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/phd2.jpg" alt="研究生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>郑源</h3>
+                            <p class="title">硕士研究生</p>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/phd3.jpg" alt="研究生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>李浩宇</h3>
+                            <p class="title">硕士研究生</p>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/phd4.jpg" alt="研究生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>王路迪</h3>
+                            <p class="title">硕士研究生</p>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/phd5.jpg" alt="研究生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>张子怡</h3>
+                            <p class="title">硕士研究生</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-category">
+                <h2>本科生</h2>
+                <div class="member-grid">
+                    <div class="member-card">
+                        <img src="images/undergrad1.jpg" alt="本科生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>刘德翥</h3>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/undergrad2.jpg" alt="本科生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>李佳慧</h3>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/undergrad3.jpg" alt="本科生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>石润荃</h3>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/undergrad4.jpg" alt="本科生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>麦尔帕提·麦麦提如孜</h3>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <img src="images/undergrad5.jpg" alt="本科生照片" class="member-photo">
+                        <div class="member-info">
+                            <h3>余佳琪</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="publications" class="section" style="display: none;">
+            <h1>发表文章</h1>
+            <div class="content-card">
+                <ul style="list-style-type: decimal;">
+                    <li>
+                        Bao, M. §; Kang, Y. §; Zheng, Y. §; Liu, Y.; Xu, C.*, Tang, X.*; Wang, L.*, Solubility Based Neodymium/Dysprosium Separation of Phenanthroline Diimides Ligands. Preparing Submitted to Chem. Commun. 2024.
+                    </li>
+                    <li>
+                        Liu, Y. §; Kang, Y. §; Zheng, Y.§; Bao, M.; Chen, J.; Tang, X.*; Xu, C.*; Wang, L.*, Phenanthroline Diimides Based Hydrophilic Ligands for Effective Intragroup Lanthanides Separation. Nat. Commun., 2024, under review.
+                    </li>
+                    <li>
+                        Kang, Y.§; Li, H.§; Bao, M.§; Zheng, Y.; Liu, D.; Li, J.; Wei, Z.; Wang, G.; Wang, L.*, A Step Forward Unravelling the Lanthanides Discrimination Puzzle: Structure-Selectivity Relationship for Phenanthroline Diimides Ligands Towards Europium and Terbium Detection in Water. J. Mater. Chem. C., 2024, invited contribution.
+                    </li>
+                    <li>
+                        Cao, H.§; Kang, Y.§; Li, B.; Liu, Y.; Li, H.; Zheng, Y.; Bao, M.; Weng, C.; Tang, X.*; Wang, L.*; Xu, C.*, Amine Terminated Phenanthroline Diimides as Aqueous Masking Agent for Efficient Am(III)/Eu(III) Separation: A New Design Strategy for Water-Soluble Lanthanides/Actinides Chelating Ligands. Inorg. Chem. Frontiers., 2024, under review.
+                    </li>
+                    <li>
+                        Liu, Y.§; Bao, M. §; Wang, L. §; Kang, Y.; Dou, Y.; Qin, J.; Guo, F.; Hao, H.; Wang, Z.; Tang, X.; Chen, J.*; Wang, L.*; Xu, C.*, Calculation-Guided Ligand Structure Optimization Leads to Efficient Acid-Resist Am(III)/Eu(III) Separation. Chem. Eng. J.2024, accepted.
+                    </li>
+                    <li>
+                        Liu, Y.§; Kang, Y.§; Bao, M.; Cao, H.; Weng, C.; Dong, X.; Hao, H.; Tang, X.; Chen, J.*; Wang, L.*; Xu, C.*, Hydroxyl-group functionalized phenanthroline diimides as efficient masking agents for Am(III)/Eu(III) separation under harsh conditions. J. Hazard. Mater. 2024,462, 132756.
+                    </li>
+                    <li>
+                        Tian, D.§; Liu Y.§; Kang, Y.§; Zhao, Y.; Li, P.*; Xu, C.*; Wang, L.*, A Simple yet Efficient Hydrophilic Phenanthroline-Based Ligand for Selective Am(III) Separation under High Acidity. ACS Cent. Sci. 2023, 9 (8), 1642-1649.
+                    </li>
+                    <li>
+                        Duan, L.*,§;  Fan, J.§;  Tian, D.§;  Kang, Y.§;  Wu, Q.;  Zhang, X.;  Li, P.;  Wang, L.*;  Shen, G.; Qiu, P., Effect of heteroatoms on the binding properties of preorganized claw-type phenanthroline-based ligands towards lanthanide cations. Colloid Surf. A-Physicochem. Eng. Asp. 2023, 663, 131019.
+                    </li>
+                    <li>
+                        Duan, L.*,§;  Fan, J.§;  Tian, D.§;  Yan, Q.§;  Zhang, X.;  Li, P.;  Xu, C.*; Wang, L.*, A novel and versatile precursor for the synthesis of highly preorganized tetradentate ligands based on phenanthroline and their binding properties towards lanthanides(III) ions. Colloid Surf. A-Physicochem. Eng. Asp. 2022, 647, 129089.
+                    </li>
+                    <li>
+                        Wang, L.; Shen, G.; Yan, X.*, Bio-inspired short peptide self-assembly: From particles to functional materials. Particuology2021, 64,14.
+                    </li>
+                    <li>
+                        Wang, L.; Cui, P.; Lystrom, L.; Lu, J.; Kilina, S.; Sun, W.*, Heteroleptic cationic iridium(iii) complexes bearing phenanthroline derivatives with extended π-conjugation as potential broadband reverse saturable absorbers. New J. Chem., 2020, 44, 456-465.
+                    </li>
+                    <li>
+                        Wang, L.; Nilsson, Z.; Tahir, M.; Chen, H.; Sambur, J. B.*, Influence of the Substrate on the Optical and Photo-electrochemical Properties of Monolayer MoS2. ACS Appl. Mater. Interfaces 2020,12, 15034-15042.
+                    </li>
+                    <li>
+                        Wang, L.; Monro, S.; Cui, P.; Yin, H.; Liu, B.; Cameron, C. G.; Xu, W.; Hetu, M.; Fuller, A.; Kilina, S.; McFarland, S. A.*; Sun, W.*, Heteroleptic Ir(III)N6 Complexes with Long-Lived Triplet Excited States and in Vitro Photobiological Activities. ACS Appl. Mater. Interfaces 2019,11, 3629-3644.
+                    </li>
+                    <li>
+                        Wang, L.; Schmid, M.; Sambur, J. B.*, Single nanoparticle photoelectrochemistry: What is next? J. Chem. Phys., 2019, 151, 180901. (featured perspective)
+                    </li>
+                    <li>
+                        Wang, L.; Sambur, J. B.*, Efficient Ultrathin Liquid Junction Photovoltaics Based on Transition Metal Dichalcogenides. Nano Lett. 2019, 19, 2960-2967.
+                    </li>
+                    <li>
+                        Wang, L.; Tahir, M.; Chen, H.; Sambur, J. B.*, Probing Charge Carrier Transport and Recombination Pathways in Monolayer MoS2/WS2Heterojunction Photoelectrodes. Nano Lett,2019, 19, 9084-9094.
+                    </li>
+                    <li>
+                        Wang, L.; Schmid, M.; Nilsson, Z.; Tahir, M.; Chen, H.; Sambur, J. B.*, Laser Annealing Improves the Photoelectrochemical Activity of Ultrathin MoSe2Photoelectrodes. ACS Appl. Mater. Interfaces 2019, 11, 19207-19217.
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 定义全局变量sections
+        const sections = ['home', 'research', 'team', 'publications'];
+        
+        // 滚动效果
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // 内容切换
+        function showContent(section) {
+            if (!sections.includes(section)) {
+                section = 'home';
+            }
+            
+            sections.forEach(s => {
+                const element = document.getElementById(s);
+                if (element) {
+                    element.style.display = s === section ? 'block' : 'none';
+                }
+            });
+            
+            // 如果不是主页，滚动到顶部
+            if (section !== 'home') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            // 更新浏览器历史记录
+            const state = { section: section };
+            const title = '';
+            const url = section === 'home' ? './' : '#' + section;
+            history.pushState(state, title, url);
+        }
+
+        // 处理浏览器返回/前进按钮事件
+        window.addEventListener('popstate', function(event) {
+            let section = 'home';
+            if (event.state && event.state.section) {
+                section = event.state.section;
+            } else if (window.location.hash) {
+                section = window.location.hash.slice(1);
+                if (!sections.includes(section)) {
+                    section = 'home';
+                }
+            }
+            
+            sections.forEach(s => {
+                const element = document.getElementById(s);
+                if (element) {
+                    element.style.display = s === section ? 'block' : 'none';
+                }
+            });
+
+            // 如果不是主页，滚动到顶部
+            if (section !== 'home') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化时将当前状态加入历史记录
+            const initialSection = window.location.hash.slice(1);
+            const section = sections.includes(initialSection) ? initialSection : 'home';
+            showContent(section);
+            history.replaceState({ section: section }, '', section === 'home' ? './' : '#' + section);
+        });
+
+        // 轮播图相关代码保持不变
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.querySelector('.slider');
+            const slides = document.querySelectorAll('.slider img');
+            const controls = document.querySelector('.slider-controls');
+            let currentSlide = 0;
+
+            // 创建轮播点
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                controls.appendChild(dot);
+            });
+
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            function goToSlide(index) {
+                currentSlide = index;
+                updateSlider();
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                updateSlider();
+            }
+
+            // 自动轮播
+            setInterval(nextSlide, 5000);
+
+            // 触摸滑动支持
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            slider.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            slider.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].clientX;
+                if (touchStartX - touchEndX > 50) {
+                    nextSlide();
+                } else if (touchEndX - touchStartX > 50) {
+                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                    updateSlider();
+                }
+            });
+        });
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.animate-fade-in').forEach(element => {
+                element.style.opacity = '0';
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html> 
