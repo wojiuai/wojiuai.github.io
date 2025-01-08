@@ -14,14 +14,18 @@
     <script>
         // 定义全局变量
         const sections = ['home', 'research', 'team', 'publications'];
-        const basePath = location.hostname.includes('github.io') ? '/lab-website' : '';
+        // 获取仓库名称
+        const repoPath = location.pathname.split('/')[1];
+        const basePath = location.hostname.includes('github.io') ? '/' + repoPath : '';
 
         // 页面加载完成后处理所有图片路径
         document.addEventListener('DOMContentLoaded', function() {
             // 处理所有图片的src
             document.querySelectorAll('img').forEach(img => {
-                if (img.src.includes('images/')) {
-                    img.src = basePath + '/' + img.getAttribute('src');
+                const originalSrc = img.getAttribute('src');
+                if (originalSrc.includes('images/')) {
+                    img.src = basePath + '/' + originalSrc;
+                    console.log('Image path:', img.src); // 添加调试输出
                 }
             });
 
