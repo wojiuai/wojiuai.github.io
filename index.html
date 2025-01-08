@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="前沿化学研究实验室 - 探索分子世界的奥秘">
+    <meta name="description" content="王力课题组">
     <meta name="keywords" content="化学研究,实验室,科研,学术,创新,分子科学">
     <meta name="author" content="化学实验室">
     <title>王力课题组</title>
@@ -12,8 +12,158 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
-        // 根据是否在GitHub Pages上设置基础路径
-        const basePath = location.hostname.includes('github.io') ? '/your-repo-name' : '';
+        // 定义全局变量
+        const sections = ['home', 'research', 'team', 'publications'];
+        const basePath = location.hostname.includes('github.io') ? '/lab-website' : '';
+
+        // 页面加载完成后处理所有图片路径
+        document.addEventListener('DOMContentLoaded', function() {
+            // 处理所有图片的src
+            document.querySelectorAll('img').forEach(img => {
+                if (img.src.includes('images/')) {
+                    img.src = basePath + '/' + img.getAttribute('src');
+                }
+            });
+
+            // 初始化页面内容
+            const initialSection = window.location.hash.slice(1);
+            const section = sections.includes(initialSection) ? initialSection : 'home';
+            showContent(section);
+            history.replaceState({ section: section }, '', section === 'home' ? './' : '#' + section);
+        });
+
+        // 滚动效果
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // 内容切换
+        function showContent(section) {
+            if (!sections.includes(section)) {
+                section = 'home';
+            }
+            
+            sections.forEach(s => {
+                const element = document.getElementById(s);
+                if (element) {
+                    element.style.display = s === section ? 'block' : 'none';
+                }
+            });
+            
+            // 如果不是主页，滚动到顶部
+            if (section !== 'home') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            // 更新浏览器历史记录
+            const state = { section: section };
+            const title = '';
+            const url = section === 'home' ? './' : '#' + section;
+            history.pushState(state, title, url);
+        }
+
+        // 处理浏览器返回/前进按钮事件
+        window.addEventListener('popstate', function(event) {
+            let section = 'home';
+            if (event.state && event.state.section) {
+                section = event.state.section;
+            } else if (window.location.hash) {
+                section = window.location.hash.slice(1);
+                if (!sections.includes(section)) {
+                    section = 'home';
+                }
+            }
+            
+            sections.forEach(s => {
+                const element = document.getElementById(s);
+                if (element) {
+                    element.style.display = s === section ? 'block' : 'none';
+                }
+            });
+
+            // 如果不是主页，滚动到顶部
+            if (section !== 'home') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        // 轮播图相关代码保持不变
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.querySelector('.slider');
+            const slides = document.querySelectorAll('.slider img');
+            const controls = document.querySelector('.slider-controls');
+            let currentSlide = 0;
+
+            // 创建轮播点
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                controls.appendChild(dot);
+            });
+
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            function goToSlide(index) {
+                currentSlide = index;
+                updateSlider();
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                updateSlider();
+            }
+
+            // 自动轮播
+            setInterval(nextSlide, 5000);
+
+            // 触摸滑动支持
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            slider.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            slider.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].clientX;
+                if (touchStartX - touchEndX > 50) {
+                    nextSlide();
+                } else if (touchEndX - touchStartX > 50) {
+                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                    updateSlider();
+                }
+            });
+        });
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.animate-fade-in').forEach(element => {
+                element.style.opacity = '0';
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                observer.observe(element);
+            });
+        });
     </script>
     <style>
         :root {
@@ -773,152 +923,5 @@
             </div>
         </section>
     </main>
-
-    <script>
-        // 定义全局变量sections
-        const sections = ['home', 'research', 'team', 'publications'];
-        
-        // 滚动效果
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            header.classList.toggle('scrolled', window.scrollY > 50);
-        });
-
-        // 内容切换
-        function showContent(section) {
-            if (!sections.includes(section)) {
-                section = 'home';
-            }
-            
-            sections.forEach(s => {
-                const element = document.getElementById(s);
-                if (element) {
-                    element.style.display = s === section ? 'block' : 'none';
-                }
-            });
-            
-            // 如果不是主页，滚动到顶部
-            if (section !== 'home') {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-
-            // 更新浏览器历史记录
-            const state = { section: section };
-            const title = '';
-            const url = section === 'home' ? './' : '#' + section;
-            history.pushState(state, title, url);
-        }
-
-        // 处理浏览器返回/前进按钮事件
-        window.addEventListener('popstate', function(event) {
-            let section = 'home';
-            if (event.state && event.state.section) {
-                section = event.state.section;
-            } else if (window.location.hash) {
-                section = window.location.hash.slice(1);
-                if (!sections.includes(section)) {
-                    section = 'home';
-                }
-            }
-            
-            sections.forEach(s => {
-                const element = document.getElementById(s);
-                if (element) {
-                    element.style.display = s === section ? 'block' : 'none';
-                }
-            });
-
-            // 如果不是主页，滚动到顶部
-            if (section !== 'home') {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        });
-
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化时将当前状态加入历史记录
-            const initialSection = window.location.hash.slice(1);
-            const section = sections.includes(initialSection) ? initialSection : 'home';
-            showContent(section);
-            history.replaceState({ section: section }, '', section === 'home' ? './' : '#' + section);
-        });
-
-        // 轮播图相关代码保持不变
-        document.addEventListener('DOMContentLoaded', () => {
-            const slider = document.querySelector('.slider');
-            const slides = document.querySelectorAll('.slider img');
-            const controls = document.querySelector('.slider-controls');
-            let currentSlide = 0;
-
-            // 创建轮播点
-            slides.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.classList.add('slider-dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(index));
-                controls.appendChild(dot);
-            });
-
-            function updateSlider() {
-                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-                document.querySelectorAll('.slider-dot').forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSlide);
-                });
-            }
-
-            function goToSlide(index) {
-                currentSlide = index;
-                updateSlider();
-            }
-
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                updateSlider();
-            }
-
-            // 自动轮播
-            setInterval(nextSlide, 5000);
-
-            // 触摸滑动支持
-            let touchStartX = 0;
-            let touchEndX = 0;
-
-            slider.addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
-            });
-
-            slider.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].clientX;
-                if (touchStartX - touchEndX > 50) {
-                    nextSlide();
-                } else if (touchEndX - touchStartX > 50) {
-                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                    updateSlider();
-                }
-            });
-        });
-
-        // 页面加载动画
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.animate-fade-in').forEach(element => {
-                element.style.opacity = '0';
-                const observer = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                });
-                observer.observe(element);
-            });
-        });
-    </script>
 </body>
 </html> 
